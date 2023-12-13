@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regression Dataset</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg bg-white sticky-top" style="border-bottom: 2px solid blue;">
+            <div class="container-fluid">
+              <a class="navbar-brand text-dark" href="#"><b>Prediction App</b></a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="d-flex justify-content-center"> <!-- Use d-flex and justify-content-center classes to center nav-links -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link  " aria-current="page" href="{{ url_for('Index') }}"><b>Classification</b></a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link " href="{{ url_for('Index2') }}"><b>Regression</b></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+              </div>
+            </div>
+          </nav>
+          <!-- navigation END -->
+
+
+          <div class="container">
+            <div class="card border-primary mt-5">
+                <div class="card-header text-bg-primary"><h5 class="card-title">Primary card title</h5></div>
+                <div class="card-body">
+                  <!-- Card Content -->
+                  <form id="classification_predict">
+                    <div class="row">
+                      <div class="col">
+                        <input id="age" type="text" class="form-control" placeholder="Age" aria-label="Age">
+                      </div>
+                      <div class="col">
+                        <!-- Update the value attribute for male and female -->
+                        <select id="sex" class="form-control">
+                          <option value="1">Male</option>
+                          <option value="0">Female</option>
+                        </select>
+                      </div>
+                    </div>
+                  
+                    <div class="row mt-3">
+                      <div class="col">
+                        <input id="bmi" type="text" class="form-control" placeholder="BMI" aria-label="BMI">
+                      </div>
+                      <div class="col">
+                        <input id="children" type="text" class="form-control" placeholder="Children" aria-label="Children">
+                      </div>
+                      <div class="col">
+                        <!-- Update the value attribute for smoker and non-smoker -->
+                        <select id="smoker" class="form-control">
+                          <option value="1">Smoker</option>
+                          <option value="0">Non Smoker</option>
+                        </select>
+                      </div>
+                    </div>
+                  
+                    <button type="button" class="btn btn-primary mt-3" onclick="predict_reg()">Predict</button>
+                  </form>
+                  
+                  
+                  <!-- card content end -->
+                </div>
+              </div>
+    
+          </div>
+
+          <script>
+            function predict_reg() {
+    // Collect form data
+    var formData = {
+        'age': document.getElementById('age').value,
+        'bmi': document.getElementById('bmi').value,
+        'sex': document.getElementById('sex').value,
+        'children': document.getElementById('children').value,
+        'smoker': document.getElementById('smoker').value,
+    };
+
+    console.log('Form Data:', formData);
+
+    // Send form data to Flask app
+    fetch('/predictreg', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Prediction Result:', data);
+
+        // Handle the prediction result here (e.g., display it using SweetAlert2)
+        Swal.fire({
+            title: 'Prediction Result',
+            text: 'The predicted value is: ' + data.prediction,
+            icon: 'success',
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+        </script>
+        
+
+
+          <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+</body>
+</html>

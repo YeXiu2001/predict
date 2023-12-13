@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg bg-white sticky-top" style="border-bottom: 2px solid blue;">
+        <div class="container-fluid">
+          <a class="navbar-brand text-dark" href="#"><b>Prediction App</b></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="d-flex justify-content-center"> <!-- Use d-flex and justify-content-center classes to center nav-links -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active " aria-current="page" href="{{ url_for('Index') }}"><b>Classification</b></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="{{ url_for('Index2') }}"><b>Regression</b></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+          </div>
+        </div>
+      </nav>
+      <!-- navigation END -->
+
+      <div class="container">
+        <!-- x = dataset[['age','Bilirubin','Cholesterol','Albucin','Tryglicerimes','Platelets','Prothrombin','Stage','Sex']] -->
+        <div class="card border-primary mt-5">
+            <div class="card-header text-bg-primary"><h5 class="card-title">Primary card title</h5></div>
+            <div class="card-body">
+              <!-- Card Content -->
+              <form id="classification_predict">
+              <div class="row">
+                <div class="col">
+                  <input id="age" type="text" class="form-control" placeholder="Age" aria-label="Age">
+                </div>
+                <div class="col">
+                    <input id="bilirubin" type="text" class="form-control" placeholder="Bilirubin" aria-label="Bilirubin">
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col">
+                  <input id="cholesterol" type="text" class="form-control" placeholder="Cholesterol" aria-label="Cholesterol">
+                </div>
+                <div class="col">
+                  <input id="albucin" type="text" class="form-control" placeholder="Albucin" aria-label="Albucin">
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col">
+                  <input id="tryglicerimes" type="text" class="form-control" placeholder="Tryglicerimes" aria-label="Tryglicerimes">
+                </div>
+                <div class="col">
+                  <input id="platelets" type="text" class="form-control" placeholder="Platelets" aria-label="Platelets">
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col">
+                  <input id="prothrombin" type="text" class="form-control" placeholder="Prothrombin" aria-label="Prothrombin">
+                </div>
+                <div class="col">
+                  <input id="stage" type="text" class="form-control" placeholder="Stage" aria-label="Stage">
+                </div>
+
+                
+              </div>
+
+              <input id="sex" type="text" class="form-control" placeholder="Sex" aria-label="Sex">
+              <button type="button" class="btn btn-primary mt-3" onclick="predict()">Predict</button>
+            </form>
+              <!-- card content end -->
+            </div>
+          </div>
+
+      </div>
+      <script>
+        function predict() {
+          // Collect form data
+          var formData = {
+            'age': document.getElementById('age').value,
+            'bilirubin': document.getElementById('bilirubin').value,
+            'cholesterol': document.getElementById('cholesterol').value,
+            'albucin': document.getElementById('albucin').value,
+            'tryglicerimes': document.getElementById('tryglicerimes').value,
+            'platelets': document.getElementById('platelets').value,
+            'prothrombin': document.getElementById('prothrombin').value,
+            'stage': document.getElementById('stage').value,
+            'sex': document.getElementById('sex').value,
+          };
+      
+          // Send form data to Flask app
+          fetch('/predict', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          })
+          .then(response => response.json())
+          .then(data => {
+            // Handle the prediction result here (e.g., display it using SweetAlert2)
+            Swal.fire({
+              title: 'Prediction Result',
+              text: 'The predicted class is: ' + data.prediction,
+              icon: 'success',
+            });
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+        }
+      </script>
+      
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+</body>
+</html>
